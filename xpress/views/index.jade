@@ -1,0 +1,34 @@
+extends layout
+
+block content
+
+  h1= title
+  p Welcome to #{title}
+  #container
+  input#myInput(type='text', placeholder='Type something...')
+  button(type='button', onclick='getInputValue();') Get dog breeds
+  script.
+    window.ReactNativeWebView.postMessage(""); // initial message value
+    window.addEventListener("message", message => {
+      document.getElementById("container").innerHTML += `${message.data}`;
+    });
+
+    function getInputValue(){
+    var request = new XMLHttpRequest()
+    //- // Open a new connection, using the GET request on the URL endpoint
+    request.open('GET', 'https://dev-lmdc-api.herokuapp.com/api/breeds', true)
+    request.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        //- alert(this.responseText)
+        var data = JSON.stringify(this.responseText)
+        window.ReactNativeWebView.postMessage(`${data}`);
+      }
+    };
+    request.send();
+
+    // Selecting the input element and get its value
+    //- var inputVal = document.getElementById("myInput").value;
+    // Displaying the value
+    //- window.ReactNativeWebView.postMessage(`input value ${aw}`);
+
+    }
